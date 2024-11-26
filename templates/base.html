@@ -4,7 +4,7 @@
 
   <head>
     <meta charset="utf-8">
-    <title>Task</title>
+    <title>{% block title %}Mi Aplicación de Tareas{% endblock %}</title>
     <link rel="stylesheet" href="{% static 'tasks/css/normalize.css' %}">
     <link rel="stylesheet" href="{% static 'tasks/css/style.css' %}">
   </head>
@@ -13,6 +13,12 @@
     <nav>
       <ul>
         <li><a href="{% url 'tasks:index' %}">Lista de Tareas</a></li> 
+        {% if user.is_authenticated %}
+          <li><a href="{% url 'tasks:logout' %}">Cerrar Sesión</a></li>
+        {% else %}
+          <li><a href="{% url 'tasks:login' %}">Iniciar Sesión</a></li>
+          <li><a href="{% url 'tasks:register' %}">Registrarse</a></li>
+        {% endif %}
       </ul>
     </nav>
     <main>
