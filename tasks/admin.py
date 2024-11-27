@@ -1,36 +1,42 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 from .models import CustomUser, Task
+from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
+from .models import CustomUser
+from .forms import CustomUserCreationForm
 
-# Registro del modelo CustomUser en el admin
-class CustomUserAdmin(UserAdmin):
-    model = CustomUser
-    list_display = ('email', 'first_name', 'last_name', 'is_staff', 'is_active')
+class CustomUserAdmin(BaseUserAdmin):
+    # Formulario para agregar usuarios
+    add_form = CustomUserCreationForm
+
+    # Campos que se mostrarán en la vista de detalles del usuario
+    list_display = ('username', 'email', 'age', 'is_staff', 'is_active')
     list_filter = ('is_staff', 'is_active')
-    search_fields = ('email', 'first_name', 'last_name')
-    ordering = ('email',)
+    ordering = ('username',)
+    search_fields = ('username', 'email')
+
+    # Configuración de los campos que aparecen en los formularios de edición y creación
     fieldsets = (
-        (None, {'fields': ('email', 'password')}),  # Este es el campo para email y contraseña
-        ('Personal info', {'fields': ('first_name', 'last_name')}),  # Información personal
-        ('Permissions', {'fields': ('is_active', 'is_staff', 'is_superuser', 'groups', 'user_permissions')}),  # Permisos
-        ('Important dates', {'fields': ('last_login', 'date_joined')}),  # Fechas importantes
+        (None, {'fields': ('username', 'email', 'password', 'age')}),
+        ('Permisos', {'fields': ('is_staff', 'is_active')}),
     )
     add_fieldsets = (
         (None, {
             'classes': ('wide',),
-            'fields': ('email', 'password1', 'password2', 'first_name', 'last_name', 'is_active', 'is_staff', 'is_superuser'),
+            'fields': ('username', 'email', 'password1', 'password2', 'age', 'is_staff', 'is_active'),
         }),
     )
-    filter_horizontal = ('groups', 'user_permissions')  # Asegúrate de que 'groups' y 'user_permissions' estén en el modelo si los usas
 
-# Registra el modelo CustomUser con el UserAdmin personalizado
+    # Especifica el modelo que usa este admin
+    model = CustomUser
+
+# Registrar el modelo y su administrador
 admin.site.register(CustomUser, CustomUserAdmin)
-
-# Registro del modelo Task en el admin
+# Configuración para el modelo Task
 class TaskAdmin(admin.ModelAdmin):
-    list_display = ('title', 'content', 'owner', 'created_at', 'updated_at')
-    search_fields = ('title', 'content')
-    list_filter = ('owner', 'created_at', 'updated_at')  # Puedes agregar más filtros si es necesario
+    list_display = ('title', 'content', 'owner', 'created_at', 'updated_at')  # Campos para mostrar
+    search_fields = ('title', 'content')  # Campos de búsqueda
+    list_filter = ('owner', 'created_at', 'updated_at')  # Filtros en el panel de admin
 
-# Registra el modelo Task
+# Registrar el modelo Task
 admin.site.register(Task, TaskAdmin)
