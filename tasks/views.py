@@ -7,6 +7,7 @@ from .models import Task
 from .forms import TaskCreationForm, CustomUserCreationForm
 from django.contrib.auth.forms import UserChangeForm, PasswordChangeForm #nuevo
 from django.contrib import messages
+from django.contrib.auth import update_session_auth_hash
 
 # Vista de inicio (listado de tareas) - Solo accesible para usuarios autenticados
 @login_required
@@ -153,16 +154,18 @@ def edit_account(request):
 @login_required
 def change_password(request):
     if request.method == 'POST':
-        form = PasswordChangeForm(request.user, request.POST)
+        form = PasswordChangeForm(user=request.user, data=request.POST)
         if form.is_valid():
-            form.save()
-            messages.success(request, "Contraseña cambiada correctamente.")
-            return redirect('tasks:profile')  # Regresar a la página de detalles
+            user = form.save()  # Guarda la nueva contraseña
+            update_session_auth_hash(request, user)  # Mantiene la sesión activa
+            messages.success(request, "Tu contraseña se ha cambiado exitosamente.")
+            return redirect('tasks:profile')  # Cambia 'tasks:profile' a la vista que desees
+        else:
+            messages.error(request, "Por favor, corrige los errores.")
     else:
-        form = PasswordChangeForm(request.user)
+        form = PasswordChangeForm(user=request.user)
 
     return render(request, 'tasks/change_password.html', {'form': form})
-
 @login_required
 def delete_account(request):
     if request.method == 'POST':
