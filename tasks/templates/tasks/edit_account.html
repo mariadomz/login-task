@@ -1,10 +1,10 @@
-<!-- templates/tasks/register.html -->
+<!-- templates/tasks/edit_account.html -->
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Registrar cuenta</title>
+    <title>Editar cuenta</title>
     <style>
         body {
             font-family: 'Arial', sans-serif;
@@ -34,7 +34,7 @@
         label {
             font-weight: bold;
         }
-        input[type="email"], input[type="password"], input[type="text"], input[type="number"] {
+        input[type="email"], input[type="text"] {
             width: 100%;
             padding: 12px;
             margin: 8px 0;
@@ -54,17 +54,12 @@
         button:hover {
             background-color: #0056b3;
         }
-        .info-text {
-            font-size: 14px;
-            margin-top: 20px;
-            color: #555;
-        }
     </style>
 </head>
 <body>
 
     <div class="container">
-        <h2>Registrar cuenta</h2>
+        <h2>Editar cuenta</h2>
 
         <!-- Mostrar mensajes de error o éxito -->
         {% if messages %}
@@ -78,46 +73,20 @@
         <form method="POST">
             {% csrf_token %}
 
-            <!-- Campo de nombre de usuario -->
+            <!-- Formulario para cambiar nombre de usuario y correo electrónico -->
             <div class="form-group">
                 <label for="username">Nombre de usuario</label>
-                {{ form.username }}
+                {{ user_form.username }}
             </div>
 
-            <!-- Campo de correo electrónico -->
             <div class="form-group">
-                <label for="email">Correo electrónico</label>
-                {{ form.email }}
+                <label for="email">Correo Electrónico</label>
+                {{ user_form.email }}
             </div>
 
-            <!-- Campo de contraseña -->
-            <div class="form-group">
-                <label for="password1">Contraseña</label>
-                {{ form.password1 }}
-            </div>
-
-            <!-- Campo de confirmación de contraseña -->
-            <div class="form-group">
-                <label for="password2">Confirmar Contraseña</label>
-                {{ form.password2 }}
-            </div>
-
-            <!-- Campo de edad -->
-            <div class="form-group">
-                <label for="age">Edad</label>
-                {{ form.age }}
-            </div>
-
-            <button type="submit">Registrar</button>
+            <button type="submit">Guardar cambios</button>
+            <a href="{% url 'tasks:delete_account' %}" class="btn delete-btn">Eliminar cuenta</a>
         </form>
-
-        <!-- Texto explicativo para las restricciones de la contraseña -->
-        <div class="info-text">
-            <p>Su contraseña no puede asemejarse tanto a su otra información personal.</p>
-            <p>Su contraseña debe contener al menos 8 caracteres.</p>
-            <p>Su contraseña no puede ser una clave utilizada comúnmente.</p>
-            <p>Su contraseña no puede ser completamente numérica.</p>
-        </div>
     </div>
 
 </body>

@@ -4,21 +4,21 @@ from django.conf import settings
 from django.utils import timezone
 # Administrador personalizado para el modelo de usuario
 class CustomUserManager(BaseUserManager):
-    def create_user(self, email, password=None, **extra_fields):
+    def create_user(self, email, password=None, age=None, **extra_fields):
         """
-        Crea y devuelve un usuario con un email y una contraseña.
+        Crea y devuelve un usuario con un email, una contraseña y una edad.
         """
         if not email:
             raise ValueError("El email es obligatorio")
         email = self.normalize_email(email)
-        user = self.model(email=email, **extra_fields)
+        user = self.model(email=email, age=age, **extra_fields)
         user.set_password(password)
         user.save(using=self._db)
         return user
 
-    def create_superuser(self, email, password=None, **extra_fields):
+    def create_superuser(self, email, password=None, age=None, **extra_fields):
         """
-        Crea y devuelve un superusuario con un email y una contraseña.
+        Crea y devuelve un superusuario con un email, una contraseña y una edad.
         """
         extra_fields.setdefault('is_staff', True)
         extra_fields.setdefault('is_superuser', True)
@@ -28,14 +28,14 @@ class CustomUserManager(BaseUserManager):
         if extra_fields.get('is_superuser') is not True:
             raise ValueError('El superusuario debe tener is_superuser=True.')
 
-        return self.create_user(email, password, **extra_fields)
-
+        return self.create_user(email, password, age, **extra_fields)
 
 # Modelo de usuario personalizado
 class CustomUser(AbstractBaseUser, PermissionsMixin):  # Agrega PermissionsMixin aquí
     email = models.EmailField(unique=True)
     first_name = models.CharField(max_length=30)
     last_name = models.CharField(max_length=30)
+    age = models.IntegerField(null=True, blank=True)  # Campo de edad
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)  # Esto indica si el usuario es administrador
 

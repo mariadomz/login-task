@@ -5,6 +5,8 @@ from django.contrib.auth.forms import AuthenticationForm
 from django.http import HttpResponseForbidden
 from .models import Task
 from .forms import TaskCreationForm, CustomUserCreationForm
+from django.contrib.auth.forms import UserChangeForm, PasswordChangeForm #nuevo
+from django.contrib import messages
 
 # Vista de inicio (listado de tareas) - Solo accesible para usuarios autenticados
 @login_required
@@ -109,7 +111,69 @@ def login_view(request):
 
     return render(request, 'tasks/login.html', {'form': form})  # Especifica la ubicación correcta de la plantilla
 
+@login_required
+def account_details(request):
+    user = request.user
+    age = user.age  # Obtener la edad del usuario directamente del campo 'age'
+    
+    if request.method == 'POST':
+        password_form = PasswordChangeForm(user, request.POST)
+        if password_form.is_valid():
+            password_form.save()
+            messages.success(request, "Contraseña cambiada correctamente.")
+            return redirect('tasks:profile')
+    else:
+        password_form = PasswordChangeForm(user)
 
+    return render(request, 'tasks/account_details.html', {
+        'user': user,
+        'age': age,
+        'password_form': password_form
+    })
+#nuevo
+
+@login_required
+def edit_account(request):
+    user = request.user
+
+    if request.method == 'POST':
+        user_form = UserChangeForm(request.POST, instance=user)
+        if user_form.is_valid():
+            user_form.save()
+            messages.success(request, "Datos actualizados correctamente.")
+            return redirect('tasks:profile')
+        else:
+            messages.error(request, "Por favor corrige los errores en el formulario.")
+    else:
+        user_form = UserChangeForm(instance=user)
+
+    return render(request, 'tasks/edit_account.html', {'user_form': user_form})
+
+
+@login_required
+def change_password(request):
+    if request.method == 'POST':
+        form = PasswordChangeForm(request.user, request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Contraseña cambiada correctamente.")
+            return redirect('tasks:profile')  # Regresar a la página de detalles
+    else:
+        form = PasswordChangeForm(request.user)
+
+    return render(request, 'tasks/change_password.html', {'form': form})
+
+@login_required
+def delete_account(request):
+    if request.method == 'POST':
+        user = request.user
+        # Cerrar la sesión del usuario antes de eliminar su cuenta
+        logout(request)
+        user.delete()
+        messages.success(request, "Tu cuenta ha sido eliminada exitosamente.")
+        return redirect('tasks:login')  # Redirige a la página de login
+
+    return render(request, 'tasks/delete_account.html')
 # Cerrar sesión
 def logout_view(request):
     logout(request)

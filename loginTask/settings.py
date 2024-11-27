@@ -87,5 +87,4 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # Configuración de usuario personalizado
 load_dotenv()
 SECRET_KEY = os.getenv('SECRET_KEY')
-
 LOGIN_URL = 'tasks:login' 

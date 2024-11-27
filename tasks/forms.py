@@ -9,9 +9,10 @@ class TaskCreationForm(forms.Form):
 
 # Formulario para registro de usuario
 class CustomUserCreationForm(UserCreationForm):
+    age = forms.IntegerField(required=True, min_value=18, max_value=120, label="Edad", widget=forms.NumberInput(attrs={'placeholder': 'Ingresa tu edad'}))
     class Meta:
         model = CustomUser
-        fields = ('email', 'first_name', 'last_name')  # Campos del modelo personalizado
+        fields = ('email', 'first_name', 'last_name','age')  # Campos del modelo personalizado
 
 # Formulario para inicio de sesión
 class CustomAuthenticationForm(AuthenticationForm):

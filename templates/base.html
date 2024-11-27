@@ -15,6 +15,7 @@
         <li><a href="{% url 'tasks:index' %}">Lista de Tareas</a></li> 
         {% if user.is_authenticated %}
           <li><a href="{% url 'tasks:logout' %}">Cerrar Sesión</a></li>
+          <li><a href="{% url 'tasks:account_details' %}">Información del Miembro</a></li>
         {% else %}
           <li><a href="{% url 'tasks:login' %}">Iniciar Sesión</a></li>
           <li><a href="{% url 'tasks:register' %}">Registrarse</a></li>

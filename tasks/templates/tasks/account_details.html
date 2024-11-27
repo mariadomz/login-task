@@ -1,0 +1,102 @@
+<!-- templates/tasks/account_details.html -->
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detalles de la cuenta</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f4f9;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .container {
+            width: 100%;
+            max-width: 500px;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+        h2 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .info {
+            margin-bottom: 15px;
+        }
+        .info label {
+            font-weight: bold;
+        }
+        .info p {
+            margin: 5px 0;
+        }
+        .btn {
+            display: block;
+            width: 100%;
+            padding: 12px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            text-align: center;
+            text-decoration: none;
+            margin-top: 20px;
+        }
+        .btn:hover {
+            background-color: #0056b3;
+        }
+        .logout-btn {
+            background-color: #dc3545;
+        }
+        .logout-btn:hover {
+            background-color: #c82333;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h2>Detalles de tu cuenta</h2>
+
+        <!-- Información del usuario -->
+        <div class="info">
+            <label for="username">Nombre de usuario:</label>
+            <p>{{ user.username }}</p>
+        </div>
+
+        <div class="info">
+            <label for="email">Correo electrónico:</label>
+            <p>{{ user.email }}</p>
+        </div>
+
+        <div class="info">
+            <label for="date_joined">Fecha de registro:</label>
+            <p>{{ user.date_joined }}</p>
+        </div>
+
+        <div class="info">
+            <label for="last_login">Último inicio de sesión:</label>
+            <p>{{ user.last_login }}</p>
+        </div>
+        
+        <div class="info">
+            <label for="age">Edad:</label>
+            <p>{{ age }}</p> <!-- Mostrar la edad -->
+        </div>
+
+        <!-- Enlace para cambiar la contraseña -->
+        <a href="{% url 'tasks:change_password' %}" class="btn">Cambiar contraseña</a>
+
+        <!-- Botón para cerrar sesión -->
+        <a href="{% url 'logout' %}" class="btn logout-btn">Cerrar sesión</a>
+    </div>
+
+</body>
+</html>
